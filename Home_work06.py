@@ -31,21 +31,21 @@ def sort_folder(path: Path ):
             cat = get_categorie(i)
             move_file(i, path, cat)
 
-def unpack_archive(path: Path):
+def unpack_archives(path: Path):
     for i in path.iterdir():
-        shutil.unpack_archive(i, path.joinpath(i.stem))
+        archive_dir = path.joinpath(i.stem)
+        archive_dir.mkdir
+        shutil.unpack_archive(i, archive_dir)
+        i.unlink
 
 def delete_empty_folders(path: Path):
     for i in path.glob("**/*"):
-        if i.is_dir():
-            if len(i.iterdir) == 0:
-                del i
+        if i.is_dir() and not any(i.iterdir()):
+            i.rmdir()
 
 def main(folder :str):
-    try:
-        path = Path(folder) 
-    except IndexError:
-        return "No argument"
+    
+    path = Path(folder) 
     
     if not path.exists:
         return "folder not found"
@@ -54,10 +54,13 @@ def main(folder :str):
     delete_empty_folders(path)
     archive_path = path.joinpath("archives")
     if archive_path.exists:
-        unpack_archive(archive_path)
+        unpack_archives(archive_path)
     return "All ok"
 
 
 
 if __name__ == "__main__":
-    print(main(sys.argv[1]))
+    try:
+        print(main("C:\test_folder"))
+    except IndexError:
+        print("No argument")
