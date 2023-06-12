@@ -4,11 +4,11 @@ import shutil
 from Normalise import translate
 
 
-CATEGORIES = {"images" : [".jpeg", ".png", ".jpg", ".svg"],
-              "audio" : [".mp3", ".ogg", ".wav", ".amr"],
-              "video": [".mp4", ".mov", ".mkv", ".avi"],
-              "docs" : [".docx", ".doc", ".txt", ".pdf", ".csv", ".xlsx", ".pptx"],
-              "archives" : [ ".zip", ".gz", ".tar"]}
+CATEGORIES = {"Images" : [".jpeg", ".png", ".jpg", ".svg"],
+              "Audio" : [".mp3", ".ogg", ".wav", ".amr"],
+              "Video": [".mp4", ".mov", ".mkv", ".avi"],
+              "Docs" : [".docx", ".doc", ".txt", ".pdf", ".csv", ".xlsx", ".pptx"],
+              "Archives" : [ ".zip", ".gz", ".tar"]}
 
 def move_file(file: Path, path : Path, cat : str):
     target_dir = path.joinpath(cat)
@@ -35,7 +35,8 @@ def unpack_archives(path: Path):
     for i in path.iterdir():
         archive_dir = path.joinpath(i.stem)
         archive_dir.mkdir
-        shutil.unpack_archive(i, archive_dir)
+        new_path = str(archive_dir)
+        shutil.unpack_archive(i, new_path)
         i.unlink
 
 def delete_empty_folders(path: Path):
@@ -52,7 +53,7 @@ def main(folder :str):
     
     sort_folder(path)
     delete_empty_folders(path)
-    archive_path = path.joinpath("archives")
+    archive_path = path.joinpath("Archives")
     if archive_path.exists:
         unpack_archives(archive_path)
     return "All ok"
@@ -61,6 +62,6 @@ def main(folder :str):
 
 if __name__ == "__main__":
     try:
-        print(main("C:\test_folder"))
+        print(main(sys.argv[1]))
     except IndexError:
         print("No argument")
