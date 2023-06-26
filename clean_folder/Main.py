@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 import shutil
-from Normalise import translate
+from clean_folder.Normalise import translate
 
 
 CATEGORIES = {"Images" : [".jpeg", ".png", ".jpg", ".svg"],
@@ -60,7 +60,7 @@ def main(folder :str):
 
 
 
-if __name__ == "__main__":
+def clean():
     try:
         print(main(sys.argv[1]))
     except IndexError:
