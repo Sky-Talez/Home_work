@@ -1,45 +1,9 @@
-from collections import UserDict
+from  Home_work10 import AddressBook, Record, Name, Phone
 
-class Field:
-    def __init__(self, value):
-        self.value = value
-
-
-class Name(Field):
-    pass
-
-        
-
-class Phone(Field):
-    pass
-
-
-class Record:
-    def __init__(self, name):
-        self.name = Name(name)
-
-    phone_numbers = []
-
-    def add_phone(self, phone):
-        self.phone_numbers.append(Phone(phone))
-
-    
-    def remove_phone(self, phone):
-        self.phone_numbers.remove(Phone(phone))
-
-    def edit_phone(self, old_phone, new_phone):
-        for i in filter(lambda x: x.value == old_phone, self.phone_numbers):
-            i.value = new_phone
-
-
-class AddressBook(UserDict):
-    def add_record(self, name, phone):
-        new_record = Record(name)
-        new_record.add_phone(phone)
-        self.data.update({new_record.name.value: new_record})
 
 
 phoneboook = AddressBook()
+
 
 def input_error(func):
     def inner(data):
@@ -64,7 +28,7 @@ def phone(data: str):
 @input_error
 def change(data: str):
     contact_info = data.split(" ")
-    phoneboook[contact_info[0]].edit_phone(contact_info[1], contact_info[2])
+    phoneboook[contact_info[0]].edit_phone(Phone(contact_info[1]), Phone(contact_info[2]))
     return f"Phonenumber {contact_info[1]} for {contact_info[0]} changed to {contact_info[2]}"
 
 @input_error
@@ -86,8 +50,14 @@ def exit(data):
 @input_error
 def add(data: str):
     result = data.split(" ")
+    result[0] = Name(result[0])
+    for i in range(len(result[1:])):
+        result[i+1] = Phone(result[i+1])
     phoneboook.add_record(*result)
-    return f"Contact {result[0]} with the phone number {result[1]} added to phonebook"
+    phones = ""
+    for i in result[1:]:
+        phones = phones + " " + i.value
+    return f"Contact {result[0].value} with the phone number(s) {phones} added to phonebook"
 
 COMANDS = {hello: "hello",
            add: "add",
